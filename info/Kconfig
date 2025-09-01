@@ -1,0 +1,13 @@
+# mysys/Kconfig
+menu "Custom syscalls (assignment)"
+    config INFO_LIBRARY
+        bool "Enable get_info* syscalls (assignment)"
+        default n
+        help
+          Builds custom syscalls:
+            - get_info_for_pid(pid, user_buf)
+            - get_info(user_buf)
+
+          If unsure, say N.
+endmenu
+

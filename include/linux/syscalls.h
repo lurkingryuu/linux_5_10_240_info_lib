@@ -1147,6 +1147,9 @@ asmlinkage long sys_sysfs(int option,
 				unsigned long arg1, unsigned long arg2);
 asmlinkage long sys_fork(void);
 
+asmlinkage long sys_get_info_for_pid(pid_t pid, char __user *buf);
+asmlinkage long sys_get_info(char __user *buf);
+
 /* obsolete: kernel/time/time.c */
 asmlinkage long sys_stime(__kernel_old_time_t __user *tptr);
 asmlinkage long sys_stime32(old_time32_t __user *tptr);

@@ -362,6 +362,8 @@
 438	common	pidfd_getfd		sys_pidfd_getfd
 439	common	faccessat2		sys_faccessat2
 440	common	process_madvise		sys_process_madvise
+441	common	get_info_for_pid	sys_get_info_for_pid
+442	common	get_info		sys_get_info
 
 #
 # Due to a historical design error, certain syscalls are numbered differently
