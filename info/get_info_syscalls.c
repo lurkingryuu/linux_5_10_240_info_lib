@@ -224,7 +224,8 @@ SYSCALL_DEFINE1(get_info, char __user *, ubuf)
     {
         struct rq *rq;
         struct cfs_rq *cfs;
-        unsigned long flags;
+        struct rq_flags rf;
+        struct sched_entity *se_min;
         
         /* Ensure current task is valid before accessing runqueue */
         if (unlikely(!current)) {
@@ -234,7 +235,7 @@ SYSCALL_DEFINE1(get_info, char __user *, ubuf)
         }
         
         /* Get current task's runqueue with proper error handling */
-        rq = task_rq_lock(current, &flags);
+        rq = task_rq_lock(current, &rf);
         if (unlikely(!rq)) {
             printk(KERN_ERR "[get_info] Failed to get runqueue\n");
             kfree(info_data);
@@ -244,7 +245,7 @@ SYSCALL_DEFINE1(get_info, char __user *, ubuf)
         cfs = &rq->cfs;
         if (unlikely(!cfs)) {
             printk(KERN_ERR "[get_info] CFS runqueue is NULL\n");
-            task_rq_unlock(rq, current, &flags);
+            task_rq_unlock(rq, current, &rf);
             kfree(info_data);
             return -EINVAL;
         }
@@ -255,7 +256,7 @@ SYSCALL_DEFINE1(get_info, char __user *, ubuf)
         info_data->min_vruntime = (unsigned long long)cfs->min_vruntime;
         
         /* Get min-vruntime entity & pid */
-        struct sched_entity *se_min = __pick_first_entity(cfs);
+        se_min = __pick_first_entity(cfs);
         if (se_min) {
             struct task_struct *t = container_of(se_min, struct task_struct, se);
             info_data->min_vruntime_pid = task_pid_nr(t);
@@ -263,7 +264,7 @@ SYSCALL_DEFINE1(get_info, char __user *, ubuf)
             info_data->min_vruntime_pid = -1;
         }
 
-        task_rq_unlock(rq, current, &flags);
+        task_rq_unlock(rq, current, &rf);
 
     }
     
